@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+      background: #f0f0f0;
+    }
+
+    form {
+      background: white;
+      padding: 30px;
+      border: 1px solid #ccc;
+      width: 350px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    form h2 {
+      text-align: center;
+    }
+
+    label {
+      margin-top: 10px;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      margin: 5px 0 15px 0;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    small {
+      color: red;
+      display: block;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style> 
+</head>
+<body>
+
+  <form id="signupForm">
+    <h2>Registration    </h2>
+
+    <label>Username:</label>
+    <input type="text" id="username" required>
+    <small id="userMsg"></small>
+
+    <label>Email:</label>
+    <input type="email" id="email" required>
+    <small id="emailMsg"></small>
+
+    <label>Password:</label>
+    <input type="password" id="password" required>
+    <small id="passMsg"></small>
+
+    <label>Confirm Password:</label>
+    <input type="password" id="confirmPassword" required>
+    <small id="confirmMsg"></small>
+
+    <label>Date of Birth:</label>
+    <input type="date" id="dob" required>
+
+    <label>Age:</label>
+    <input type="number" id="age" readonly>
+
+    <label>Country Code:</label>
+    <select>
+      <option>+1 (USA)</option>
+      <option>+91 (India)</option>
+      <option>+44 (UK)</option>
+      <option>+61 (Australia)</option>
+    </select>
+
+    <label>Mobile Number:</label>
+    <input type="text" id="mobile" placeholder="Enter 10-digit number" required>
+    <small id="mobileMsg"></small>
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("signupForm");
+
+      const username = document.getElementById("username");
+      const userMsg = document.getElementById("userMsg");
+
+      const email = document.getElementById("email");
+      const emailMsg = document.getElementById("emailMsg");
+
+      const password = document.getElementById("password");
+      const confirmPassword = document.getElementById("confirmPassword");
+      const passMsg = document.getElementById("passMsg");
+      const confirmMsg = document.getElementById("confirmMsg");
+
+      const dob = document.getElementById("dob");
+      const age = document.getElementById("age");
+
+      const mobile = document.getElementById("mobile");
+      const mobileMsg = document.getElementById("mobileMsg");
+
+      // Username Validation
+      username.addEventListener("blur", function () {
+        userMsg.textContent = username.value.length < 3
+          ? "Username must be at least 3 characters long." : "";
+      });
+
+      // Email Validation (fixed)
+      email.addEventListener("blur", function () {
+        const validDomains = ["@gmail.com", "@yahoo.com", "@hotmail.com", "@outlook.com"];
+        const isValid = validDomains.some(domain => email.value.endsWith(domain));
+        emailMsg.textContent = isValid ? "" : "Enter valid mail id";
+      });
+
+      // Password Validation (fixed regex)
+      password.addEventListener("blur", function () {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+        passMsg.textContent = regex.test(password.value)
+          ? "" : "Password must be at least 8 characters long, and include lowercase, uppercase, number, and special character.";
+      });
+
+      // Confirm Password Match
+      confirmPassword.addEventListener("blur", function () {
+        confirmMsg.textContent = password.value === confirmPassword.value
+          ? "" : "The password does not match.";
+      });
+
+      // Calculate Age
+      dob.addEventListener("change", function () {
+        const birthDate = new Date(dob.value);
+        const today = new Date();
+        let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          calculatedAge--;
+        }
+        age.value = calculatedAge;
+      });
+
+      // Mobile Number Validation
+      mobile.addEventListener("blur", function () {
+        const mobileValue = mobile.value;
+        const regex = /^[0-9]{10}$/;
+        mobileMsg.textContent = regex.test(mobileValue)
+          ? "" : "Enter a valid Mobile number";
+      });
+
+      // Final Form Validation Before Submit
+      form.addEventListener("submit", function (e) {
+        if (
+          userMsg.textContent ||
+          emailMsg.textContent ||
+          passMsg.textContent ||
+          confirmMsg.textContent ||
+          mobileMsg.textContent
+        ) {
+          alert("Please fix validation errors before submitting.");
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
